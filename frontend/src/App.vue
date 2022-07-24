@@ -1,11 +1,14 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { LocalStorage } from 'quasar';
+import { useAuth } from 'src/stores';
+const authStore = useAuth();
 
-export default defineComponent({
-    name: 'App',
+// Update the user's data in local storage whenever the state changes.
+authStore.$subscribe((mutation, state) => {
+    LocalStorage.set('user', state.user);
 });
 </script>
 
 <template>
-    <router-view/>
+    <router-view />
 </template>

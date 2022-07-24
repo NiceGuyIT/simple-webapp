@@ -1,6 +1,11 @@
 import { route } from 'quasar/wrappers';
-import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
-
+import {
+    createMemoryHistory,
+    createRouter,
+    createWebHashHistory,
+    createWebHistory,
+} from 'vue-router';
+import { LocalStorage } from 'quasar';
 import routes from './routes';
 
 /*
@@ -15,7 +20,9 @@ import routes from './routes';
 export default route(function (/* { store, ssrContext } */) {
     const createHistory = process.env.SERVER
         ? createMemoryHistory
-        : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+        : process.env.VUE_ROUTER_MODE === 'history'
+        ? createWebHistory
+        : createWebHashHistory;
 
     const Router = createRouter({
         scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -25,6 +32,28 @@ export default route(function (/* { store, ssrContext } */) {
         // quasar.conf.js -> build -> vueRouterMode
         // quasar.conf.js -> build -> publicPath
         history: createHistory(process.env.VUE_ROUTER_BASE),
+    });
+
+    // Check if the user is authenticated on every route change.
+    Router.beforeEach((to, from, next) => {
+        if (to.matched.some((record) => record.meta.requiresAuth)) {
+            if (LocalStorage.getItem('user')) {
+                next();
+                return;
+            }
+            next('/login');
+        } else {
+            next();
+        }
+    });
+
+    // If the user is authenticated, redirect to the dashboard if they try to access the login page.
+    Router.beforeEach((to, from, next) => {
+        if (to.path === '/login' && LocalStorage.getItem('user')) {
+            next({
+                path: '/',
+            });
+        } else next();
     });
 
     return Router;
