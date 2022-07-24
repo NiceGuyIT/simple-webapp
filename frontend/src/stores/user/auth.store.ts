@@ -1,22 +1,28 @@
 import { defineStore } from 'pinia';
 import { Notify } from 'quasar';
+import fetchHelper from 'src/mixins/fetchHelper';
 
 const baseUrl = 'http://localhost:8090';
 
 export const useAuth = defineStore({
     id: 'auth',
     state: () => ({
-        user: {},
+        user: {
+            token: '',
+        },
         returnUrl: null,
     }),
     actions: {
+        /**
+         * Login the user.
+         * @param email The email of the user.
+         * @param password The password of the user.
+         */
         async login(email: string, password: string) {
-            const user = await fetch(`${baseUrl}/api/admins/auth-via-email`, {
+            const user = await fetchHelper({
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
+                body: { email, password },
+                url: `${baseUrl}/api/admins/auth-via-email`,
             })
                 .then((res) => {
                     // If the status is not 200, then throw an error.
@@ -55,7 +61,10 @@ export const useAuth = defineStore({
             });
         },
         logout() {
-            this.user = '';
+            // Empty the user object in the store.
+            this.user = {
+                token: '',
+            };
             localStorage.removeItem('user');
             this.router.push({
                 path: '/logout',
