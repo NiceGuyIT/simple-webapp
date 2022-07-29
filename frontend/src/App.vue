@@ -5,7 +5,7 @@ const authStore = useAuth();
 
 // Update the user's data in local storage whenever the state changes.
 authStore.$subscribe((mutation, state) => {
-    LocalStorage.set('user', state.user);
+    LocalStorage.set('token', state.user.token);
 });
 </script>
 
