@@ -6,7 +6,7 @@
                     <h1 class="text-h3">Login</h1>
                 </div>
                 <q-card-section>
-                    <q-form class="q-gutter-md full-width" @submit="onSubmit">
+                    <q-form class="q-gutter-md" @submit="onSubmit">
                         <q-input
                             filled
                             label="Username *"
@@ -60,7 +60,7 @@ function onSubmit() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .auth-page-form {
     display: flex;
     flex-direction: column;
@@ -70,7 +70,11 @@ function onSubmit() {
     width: 100%;
 
     .q-card__section {
-        min-width: 40vh;
+        min-width: 90vw;
+
+        @media (min-width: $breakpoint-sm-max) {
+            min-width: 40vw;
+        }
     }
 }
 </style>

@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
-import { Notify } from 'quasar';
+import { Notify, LocalStorage } from 'quasar';
 import fetchHelper from 'src/mixins/fetchHelper';
-
-const baseUrl = 'http://localhost:8090';
 
 export const useAuth = defineStore({
     id: 'auth',
     state: () => ({
         user: {
-            token: '',
+            token: LocalStorage.getItem('token'),
         },
         returnUrl: null,
     }),
@@ -22,7 +20,7 @@ export const useAuth = defineStore({
             const user = await fetchHelper({
                 method: 'POST',
                 body: { email, password },
-                url: `${baseUrl}/api/admins/auth-via-email`,
+                url: '/api/admins/auth-via-email',
             })
                 .then((res) => {
                     // If the status is not 200, then throw an error.
@@ -55,6 +53,8 @@ export const useAuth = defineStore({
             // Update state for the user, localStorage will be updated in App.vue
             this.user = user;
 
+            console.log(user);
+
             // Redirect the user to the previous path or to the dashboard home.
             this.router.push({
                 path: this.returnUrl || '/',
@@ -65,9 +65,15 @@ export const useAuth = defineStore({
             this.user = {
                 token: '',
             };
-            localStorage.removeItem('user');
+            LocalStorage.remove('token');
+            Notify.create({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Logged out successfully!',
+            });
             this.router.push({
-                path: '/logout',
+                path: '/login',
             });
         },
     },
