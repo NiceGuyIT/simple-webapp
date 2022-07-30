@@ -3,6 +3,7 @@ import { Notify } from 'quasar';
 import fetchHelper from 'src/mixins/fetchHelper';
 
 const baseUrl = 'http://localhost:8090';
+// const baseUrl = API_URL;
 
 export const useAuth = defineStore({
     id: 'auth',
