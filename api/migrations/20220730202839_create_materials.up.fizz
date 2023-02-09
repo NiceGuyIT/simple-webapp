@@ -1,0 +1,6 @@
+create_table("materials") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("name", "string", {})
+	t.Column("source", "string", {})
+	t.Timestamps()
+}

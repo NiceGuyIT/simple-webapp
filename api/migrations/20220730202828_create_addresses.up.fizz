@@ -1,0 +1,11 @@
+create_table("addresses") {
+	t.Column("id", "uuid", {primary: true})
+	t.Column("name", "string", {})
+	t.Column("type", "string", {})
+	t.Column("address1", "string", {})
+	t.Column("address2", "string", {})
+	t.Column("city", "string", {})
+	t.Column("state", "string", {})
+	t.Column("zip", "string", {})
+	t.Timestamps()
+}

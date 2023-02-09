@@ -1,3 +1,17 @@
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { useAuth } from 'src/stores';
+
+const email = ref('');
+const password = ref('');
+
+function onSubmit() {
+    const authStore = useAuth();
+
+    return authStore.login(email.value, password.value);
+}
+</script>
+
 <template>
     <q-layout>
         <q-page-container>
@@ -6,7 +20,7 @@
                     <h1 class="text-h3">Login</h1>
                 </div>
                 <q-card-section>
-                    <q-form class="q-gutter-md full-width" @submit="onSubmit">
+                    <q-form class="q-gutter-md" @submit="onSubmit">
                         <q-input
                             filled
                             label="Username *"
@@ -46,21 +60,7 @@
     </q-layout>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-import { useAuth } from 'src/stores';
-
-const email = ref('');
-const password = ref('');
-
-function onSubmit() {
-    const authStore = useAuth();
-
-    return authStore.login(email.value, password.value);
-}
-</script>
-
-<style lang="scss" scoped>
+<style lang="scss">
 .auth-page-form {
     display: flex;
     flex-direction: column;
@@ -70,7 +70,11 @@ function onSubmit() {
     width: 100%;
 
     .q-card__section {
-        min-width: 40vh;
+        min-width: 90vw;
+
+        @media (min-width: $breakpoint-sm-max) {
+            min-width: 40vw;
+        }
     }
 }
 </style>

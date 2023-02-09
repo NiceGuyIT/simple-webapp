@@ -1,0 +1,14 @@
+---
+development:
+    dialect: postgres
+    database: {{ envOr "DEV_DATABASE_NAME" "db_development" }}
+    user: {{ envOr "DEV_DATABASE_USER" "db_user" }}
+    password: {{ envOr "DEV_DATABASE_PASSWORD" "password" }}
+    host: {{ envOr "DEV_DATABASE_HOST" "127.0.0.1" }}
+    pool: 1
+
+test:
+    url: {{ envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/links_test?sslmode=disable" }}
+
+production:
+    url: {{ envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/links_production?sslmode=disable" }}

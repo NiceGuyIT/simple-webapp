@@ -9,7 +9,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require('quasar/wrappers');
-const path = require("path");
+const path = require('path');
 
 module.exports = configure(function (ctx) {
     const path = require('path');
@@ -61,7 +61,7 @@ module.exports = configure(function (ctx) {
                 node: 'node16',
             },
 
-            vueRouterMode: 'hash', // available values: 'hash', 'history'
+            vueRouterMode: 'history', // available values: 'hash', 'history'
             // vueRouterBase,
             // vueDevtools,
             // vueOptionsAPI: false,
@@ -70,7 +70,13 @@ module.exports = configure(function (ctx) {
 
             // publicPath: '/',
             // analyze: true,
-            // env: {},
+            env: {
+                // FIXME: This doesn't work. process.env doesn't pull in the variables,
+                //  and import.meta.env can't be used.
+                // API_URL: process.env.VITE_API_URL,
+                // API_URL: process.env.API_URL,
+                API_URL: 'http://localhost:9091/',
+            },
             // rawDefine: {}
             // ignorePublicFolder: true,
             // minify: false,
@@ -92,7 +98,7 @@ module.exports = configure(function (ctx) {
         // Full list of options: https://quasar.dev/quasar-cli-vite/quasar-config-js#devServer
         devServer: {
             open: false, // opens browser window automatically
-            https: false,
+            // https: true,
             port: ctx.mode.spa
                 ? 8080
                 : (ctx.mode.pwa ? 9000 : 9090),
@@ -101,7 +107,9 @@ module.exports = configure(function (ctx) {
             proxy: {
                 // proxy all requests starting with /api
                 '/api': {
-                    target: 'http://localhost:8090',
+                    // FIXME: This cannot pull in the env variable above.
+                    target: 'http://localhost:9091',
+                    // target: process.env.API_URL,
                 },
             },
         },

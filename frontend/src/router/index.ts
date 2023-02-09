@@ -37,23 +37,27 @@ export default route(function (/* { store, ssrContext } */) {
     // Check if the user is authenticated on every route change.
     Router.beforeEach((to, from, next) => {
         if (to.matched.some((record) => record.meta.requiresAuth)) {
-            if (LocalStorage.getItem('user')) {
+            if (LocalStorage.getItem('token')) {
                 next();
                 return;
             }
             next('/login');
+            return;
         } else {
             next();
+            return;
         }
     });
 
     // If the user is authenticated, redirect to the dashboard if they try to access the login page.
     Router.beforeEach((to, from, next) => {
-        if (to.path === '/login' && LocalStorage.getItem('user')) {
+        if (to.path === '/login' && LocalStorage.getItem('token')) {
             next({
                 path: '/',
             });
+            return;
         } else next();
+        return;
     });
 
     return Router;
